@@ -1,0 +1,7 @@
+#!/usr/bin/expect -f
+
+spawn scp *.mkv u319375@u319375.your-storagebox.de:/
+expect "*assword:*"
+send "oNW98UkJb2E0btAG"
+interact
+exit
