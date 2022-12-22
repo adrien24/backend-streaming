@@ -6,12 +6,10 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
 
-// Use the FFMpeg tool
 use FFMpeg\FFMpeg;
-use FFMpeg\Format\Video\X264;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 
 class convert extends AbstractController
@@ -28,17 +26,14 @@ class convert extends AbstractController
             )
         );
         // Path of the directory
-        $video = $this->getParameter('kernel.project_dir'). '/src/assets/needConvert';
-        // File of the video
-        $videoD = $ffmpeg->open($video. '/Jujutsu.mkv');
-        // Format video encode
-        $format = new X264();
-        // Format audio encode
-        $format->setAudioCodec("libmp3lame");
-        // Target save video directory
-        $videoD->save($format, $video . '/Jujutsu.mp4');
-
-
-        return new Response("webm video succesfully converted to mp4");
+        $pathToHelloWorldScript = $this->getParameter('kernel.project_dir'). '/src/assets/converter.sh';
+        $process = new Process(['sh', $pathToHelloWorldScript]);
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new ProcessFailedException($process);
+        }
+        // Cela affichera "Hello World"
+        echo $process->getOutput();
+        // ...
     }
 }

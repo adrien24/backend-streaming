@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-$j=0;
-for i in *.mp4;
-  do name=`echo "$i" | cut -d'.' -f1`
-  echo "$name"
-  ffmpeg -i "$i" "${name}-COPY.mp4"
+
+for i in *.mkv;
+do (ffmpeg-bar -i "$i" -c:v libx264 -preset slow -crf 22 -vf subtitles="$i" "${i%.*}.mp4";
+rm "$i"
+);
 done
